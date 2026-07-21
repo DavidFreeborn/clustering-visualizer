@@ -3,22 +3,35 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Dynamic Clustering Visualiser</title>
+  <title>Dynamic Clustering Visualiser | David Freeborn</title>
+  <meta name="description" content="A step-by-step visual guide to how major clustering algorithms behave on different data geometries." />
+  <link rel="canonical" href="https://www.davidpeterwallisfreeborn.com/fun/dynamic-clustering-visualiser/" />
+  <meta property="og:title" content="Dynamic Clustering Visualiser" />
+  <meta property="og:description" content="A step-by-step visual guide to how major clustering algorithms behave on different data geometries." />
+  <meta property="og:url" content="https://www.davidpeterwallisfreeborn.com/fun/dynamic-clustering-visualiser/" />
+  <meta property="og:type" content="website" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Dynamic Clustering Visualiser" />
+  <meta name="twitter:description" content="A step-by-step visual guide to how major clustering algorithms behave on different data geometries." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=EB+Garamond:wght@400;600&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --page: #f4f4f1;
+      --page: #ffffff;
       --panel: #ffffff;
-      --ink: #111111;
-      --muted: #64645f;
-      --faint: #8a8a83;
-      --line: #d9d9d2;
-      --line-strong: #b9b9b0;
-      --soft: #f7f7f4;
-      --accent: #183b4a;
-      --accent-soft: rgba(24, 59, 74, 0.08);
-      --radius: 12px;
-      --sans: Inter, "IBM Plex Sans", "Helvetica Neue", Arial, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      --mono: "IBM Plex Mono", "SFMono-Regular", Consolas, Menlo, monospace;
+      --ink: #1a1a1a;
+      --muted: #555555;
+      --faint: #888888;
+      --line: #d0d0d0;
+      --line-strong: #b0b0b0;
+      --soft: #f8f8f8;
+      --accent: #2563eb;
+      --accent-soft: rgba(37, 99, 235, 0.08);
+      --radius: 2px;
+      --serif: "EB Garamond", Georgia, "Times New Roman", serif;
+      --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      --mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
     }
 
     * { box-sizing: border-box; }
@@ -30,30 +43,44 @@
       background: var(--page);
       color: var(--ink);
       font-family: var(--sans);
-      line-height: 1.34;
-      text-rendering: geometricPrecision;
+      font-size: 0.9375rem;
+      line-height: 1.5;
     }
+
+    a { color: var(--accent); }
+
+    .back-nav {
+      max-width: 1240px;
+      margin: 0 auto;
+      padding: 1rem 1.125rem 0;
+    }
+    .back-nav a {
+      font-size: 0.875rem;
+      text-decoration: none;
+    }
+    .back-nav a:hover { text-decoration: underline; }
 
     .cluster-app {
       max-width: 1240px;
       margin: 0 auto;
-      padding: 22px 18px 32px;
+      padding: 0.5rem 1.125rem 2rem;
     }
 
     header {
-      margin-bottom: 14px;
+      margin-bottom: 1rem;
       display: flex;
       align-items: flex-end;
       justify-content: space-between;
-      gap: 20px;
+      gap: 1.25rem;
     }
 
     h1 {
       margin: 0;
-      font-size: clamp(2rem, 4vw, 3.55rem);
-      line-height: 0.98;
-      font-weight: 640;
-      letter-spacing: -0.045em;
+      font-family: var(--serif);
+      font-size: 2rem;
+      line-height: 1.2;
+      font-weight: 600;
+      letter-spacing: -0.01em;
     }
 
     .main-grid {
@@ -63,19 +90,16 @@
       align-items: start;
     }
 
-    .stage-card,
-    .control-card,
-    .reading-card {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: var(--radius);
-    }
-
-    .stage-card {
-      overflow: hidden;
+    .stage-section {
       min-height: 718px;
       display: grid;
       grid-template-rows: auto auto minmax(590px, 1fr);
+    }
+
+    .controls-group {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
     }
 
     .stage-topbar {
@@ -83,9 +107,8 @@
       justify-content: space-between;
       align-items: center;
       gap: 16px;
-      padding: 13px 15px 11px;
+      padding: 0.75rem 0;
       border-bottom: 1px solid var(--line);
-      background: #fff;
     }
 
     .stage-label {
@@ -147,6 +170,7 @@
       position: relative;
       min-height: 590px;
       background: #ffffff;
+      border: 1px solid var(--line);
     }
 
     canvas {
@@ -163,9 +187,8 @@
       align-items: center;
       justify-content: space-between;
       gap: 12px;
-      padding: 13px 15px;
+      padding: 0.75rem 0;
       border-bottom: 1px solid var(--line);
-      background: #fbfbfa;
     }
 
     .button-row {
@@ -180,19 +203,17 @@
       border: 1px solid var(--ink);
       background: var(--ink);
       color: #fff;
-      border-radius: 8px;
-      padding: 9px 14px;
+      border-radius: var(--radius);
+      padding: 0.5rem 0.875rem;
       font: inherit;
-      font-size: 0.79rem;
-      font-weight: 720;
-      letter-spacing: 0.055em;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.02em;
       text-transform: uppercase;
       cursor: pointer;
-      transition: background 130ms ease, color 130ms ease, border-color 130ms ease, transform 130ms ease;
     }
 
-    button:hover { transform: translateY(-1px); }
-    button:active { transform: translateY(0); }
+    button:hover { background: #333; }
 
     button.secondary {
       background: #fff;
@@ -200,30 +221,39 @@
       border-color: var(--line-strong);
     }
 
+    button.secondary:hover { background: #f5f5f5; }
+
     .speed-control {
       display: flex;
       align-items: center;
-      gap: 9px;
-      min-width: 245px;
+      gap: 0.5rem;
+      min-width: 220px;
       color: var(--muted);
-      font-size: 0.72rem;
-      font-weight: 720;
-      letter-spacing: 0.08em;
+      font-size: 0.6875rem;
+      font-weight: 600;
+      letter-spacing: 0.05em;
       text-transform: uppercase;
       border: 1px solid var(--line);
-      border-radius: 10px;
+      border-radius: var(--radius);
       background: #fff;
-      padding: 8px 10px;
+      padding: 0.5rem 0.625rem;
     }
 
     .side-stack {
-      display: grid;
-      gap: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
       min-width: 0;
     }
 
-    .control-card,
-    .reading-card { padding: 14px; }
+    .control-section {
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .reading-section {
+      padding-top: 0.5rem;
+    }
 
     .section-title {
       margin: 0 0 12px;
@@ -268,19 +298,19 @@
     input[type="number"] {
       width: 100%;
       border: 1px solid var(--line);
-      border-radius: 9px;
-      padding: 9px 9px;
+      border-radius: var(--radius);
+      padding: 0.5rem;
       background: #fff;
       color: var(--ink);
       font: inherit;
-      font-size: 0.88rem;
+      font-size: 0.875rem;
       outline: none;
     }
 
     select:focus,
     input[type="number"]:focus {
-      border-color: #8aa0a8;
-      box-shadow: 0 0 0 3px var(--accent-soft);
+      border-color: var(--accent);
+      box-shadow: 0 0 0 2px var(--accent-soft);
     }
 
     input[type="range"] {
@@ -299,17 +329,17 @@
 
     .checkbox-row input { accent-color: var(--accent); }
 
-    .reading-card {
+    .reading-section {
       display: flex;
       flex-direction: column;
-      gap: 11px;
+      gap: 0.75rem;
     }
 
-    .reading-card h2 {
+    .reading-section h2 {
       margin: 0;
-      font-size: 1.18rem;
-      letter-spacing: -0.025em;
-      font-weight: 680;
+      font-family: var(--serif);
+      font-size: 1.125rem;
+      font-weight: 600;
     }
 
     .principle {
@@ -319,16 +349,15 @@
     }
 
     .step-box {
-      background: var(--soft);
-      border: 1px solid var(--line);
-      border-radius: 10px;
-      padding: 11px 12px;
-      min-height: 78px;
+      padding: 0.75rem 0;
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      min-height: 60px;
     }
 
     .step-box strong {
       display: block;
-      margin-bottom: 5px;
+      margin-bottom: 0.25rem;
       color: var(--muted);
       font-size: 0.68rem;
       letter-spacing: 0.12em;
@@ -367,9 +396,9 @@
 
     @media (max-width: 1040px) {
       .main-grid { grid-template-columns: 1fr; }
-      .stage-card { min-height: 640px; }
-      .side-stack { grid-template-columns: 1fr 1fr; align-items: start; }
-      .reading-card { grid-column: 1 / -1; }
+      .stage-section { min-height: 640px; }
+      .side-stack { display: grid; grid-template-columns: 1fr 1fr; align-items: start; }
+      .reading-section { grid-column: 1 / -1; }
     }
 
     @media (max-width: 720px) {
@@ -387,13 +416,14 @@
   </style>
 </head>
 <body>
+  <nav class="back-nav"><a href="/fun/">← Back to Visualisations</a></nav>
   <main class="cluster-app" aria-label="Dynamic clustering visualiser">
     <header>
       <h1>Dynamic Clustering Visualiser</h1>
     </header>
 
     <section class="main-grid">
-      <article class="stage-card">
+      <article class="stage-section">
         <div class="stage-topbar">
           <div class="stage-label">
             <strong id="stageTitle">k-means on separated Gaussian blobs</strong>
@@ -426,7 +456,7 @@
       </article>
 
       <aside class="side-stack">
-        <section class="control-card">
+        <section class="control-section">
           <p class="section-title">Data parameters</p>
           <div class="control-grid">
             <div class="field full">
@@ -470,7 +500,7 @@
           </div>
         </section>
 
-        <section class="control-card">
+        <section class="control-section">
           <p class="section-title">Clustering parameters</p>
           <div class="control-grid">
             <div class="field full">
@@ -551,7 +581,7 @@
           </div>
         </section>
 
-        <section class="reading-card">
+        <section class="reading-section">
           <h2 id="methodName">k-means</h2>
           <p class="principle" id="principle">Choose k centres. Assign each point to its nearest centre. Move each centre to the mean of the points assigned to it. Repeat until stable.</p>
           <div class="step-box">
