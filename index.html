@@ -423,14 +423,18 @@
 .tool-page :is(button,select,summary) { min-height:36px; }
 .tool-page h1 { font-family:var(--tool-serif); font-size:32px; line-height:1.2; font-weight:500; letter-spacing:normal; }
 .tool-page :is(h2,h3) { font-family:var(--tool-serif); }
-.tool-page :is(a,button,input,select,textarea,summary,[tabindex]):focus-visible { outline:2px solid currentColor!important; outline-offset:3px; }
-.tool-page .tool-methodology { max-width:72ch; margin:24px auto; padding:16px; border-top:1px solid #bbb; font:17px/1.55 var(--tool-serif); }
-.tool-methodology summary { cursor:pointer; font-weight:600; }
-.tool-methodology h3 { margin:18px 0 6px; font-size:22px; }
-.tool-methodology p { margin:8px 0; }
+.tool-page :is(a,button,input,select,textarea,summary,[tabindex]):focus-visible { outline:2px solid #222!important; outline-offset:3px; box-shadow:0 0 0 3px #fff!important; }
+.tool-page .tool-methodology { box-sizing:border-box; grid-column:1 / -1; width:100%; max-width:none; margin:24px 0 0; padding:16px 0; border:0; border-top:1px solid #bbb; border-radius:0; background:transparent; color:#222; font:18px/1.55 var(--tool-serif); text-align:left; }
+.tool-page .tool-methodology > summary { cursor:pointer; font:400 21px/1.4 var(--tool-serif)!important; letter-spacing:normal; text-transform:none; }
+.tool-page .tool-methodology h3 { margin:20px 0 6px; font:400 20px/1.4 var(--tool-serif); letter-spacing:normal; text-transform:none; }
+.tool-page .tool-methodology :is(p,li) { max-width:none; font:inherit; }
+.tool-page .tool-methodology p { margin:8px 0; }
+.tool-page .tool-methodology a { color:inherit; text-decoration:underline; text-underline-offset:3px; }
+.tool-page .tool-methodology .equation { overflow-x:auto; padding:10px 0; font-size:17px; }
+.tool-page .tool-methodology table { width:100%; border-collapse:collapse; font:inherit; }
+.tool-page .tool-methodology :is(th,td) { padding:8px; border-bottom:1px solid #ddd; text-align:left; font-weight:400; vertical-align:top; }
 @media(max-width:600px) { .tool-page :is(button,select,summary) { min-height:44px; } }
 @media(prefers-reduced-motion:reduce) { .tool-page *, .tool-page *::before, .tool-page *::after { scroll-behavior:auto!important; transition:none!important; } }
-
 /* Tool-specific styles */
 .tool-page .main-grid>*{min-width:0}.tool-page .stage-section{grid-template-columns:minmax(0,1fr)}.tool-page .stage-section>*{min-width:0}.tool-page .stage-label{max-width:100%}.tool-page :is(button,label,.metric span){font-size:14px;text-transform:none;letter-spacing:normal}.tool-page .stage-topbar{flex-wrap:wrap}.tool-page select{max-width:100%;min-width:0}.tool-page .controls-group{min-width:0}@media(max-width:700px){.tool-page .main-grid{grid-template-columns:minmax(0,1fr)}.tool-page .canvas-wrap,.tool-page canvas{min-height:350px}.tool-page .stage-section{min-height:0;grid-template-rows:auto auto 350px}.tool-page .stage-metrics{flex-wrap:wrap}}</style>
 </head>
@@ -612,8 +616,8 @@
         </section>
       </aside>
     </section>
-  </main>
-<details class="tool-methodology"><summary>Model and methodology</summary><h3>Model</h3><p>The selected algorithm groups a generated two-dimensional dataset according to its own distance, density or connectivity criterion. The step controls expose intermediate assignments; the algorithm-specific explanation describes the current procedure.</p><h3>Assumptions and limitations</h3><p>These synthetic datasets illustrate algorithm behaviour. A cluster is not necessarily a natural category: its shape and membership depend on the metric, parameters, initialisation and data geometry. Compare algorithms on the same dataset and inspect failed as well as successful partitions. Displayed metrics summarise the chosen criterion; they do not establish scientific validity.</p><h3>References and implementation</h3><p>See the <a href="https://github.com/DavidFreeborn/clustering-visualizer">source implementation</a> and <a href="https://scikit-learn.org/stable/modules/clustering.html">scikit-learn clustering guide</a> for algorithm definitions and their assumptions. This visualiser implements its own educational versions.</p></details>
+  <details class="tool-methodology"><summary>Model and methodology</summary><h3>Model</h3><p>The selected algorithm groups a generated two-dimensional dataset according to its own distance, density or connectivity criterion. The step controls expose intermediate assignments; the algorithm-specific explanation describes the current procedure.</p><h3>Assumptions and limitations</h3><p>These synthetic datasets illustrate algorithm behaviour. A cluster is not necessarily a natural category: its shape and membership depend on the metric, parameters, initialisation and data geometry. Compare algorithms on the same dataset and inspect failed as well as successful partitions. Displayed metrics summarise the chosen criterion; they do not establish scientific validity.</p><h3>References and implementation</h3><p>See the <a href="https://github.com/DavidFreeborn/clustering-visualizer">source implementation</a> and <a href="https://scikit-learn.org/stable/modules/clustering.html">scikit-learn clustering guide</a> for algorithm definitions and their assumptions. This visualiser implements its own educational versions.</p></details>
+</main>
 
   <script>
     (() => {
